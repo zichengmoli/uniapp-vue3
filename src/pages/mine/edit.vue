@@ -2,48 +2,77 @@
   <view class="container">
     <view class="header" :style="{ paddingTop: statusBarHeight + 'px' }">
       <view class="header-content">
-        <view class="back-btn" @click="goBack">
-          <view class="icon-back"></view>
+        <view class="back-link" @click="goBack">取消</view>
+        <text class="title">编辑资料</text>
+        <view class="placeholder"></view>
+      </view>
+    </view>
+
+    <scroll-view scroll-y class="scroll-body">
+      <view class="form-wrapper">
+        <!-- Profile Avatar Section -->
+        <view class="avatar-section">
+          <image :src="userAvatar" class="avatar-preview" mode="aspectFill" />
+          <text class="avatar-hint">点击更换头像</text>
         </view>
-        <text class="title">编辑个人信息</text>
-        <view class="save-btn" @click="handleSave">保存</view>
-      </view>
-    </view>
 
-    <view class="form-container">
-      <view class="form-group">
-        <text class="label">性别</text>
-        <view class="picker-trigger" @click="handleGenderSelect">
-          <text class="picker-text">{{ formData.gender || '请选择' }}</text>
-          <text class="arrow">❯</text>
+        <!-- Input Groups - Elegant Refactored Style -->
+        <view class="elegant-form">
+          <view class="elegant-item">
+            <text class="item-label">昵称</text>
+            <view class="input-wrap">
+              <input 
+                class="elegant-input" 
+                v-model="formData.nickname" 
+                placeholder="填写昵称" 
+                placeholder-class="placeholder-style"
+              />
+            </view>
+          </view>
+
+          <view class="elegant-item">
+            <text class="item-label">性别</text>
+            <view class="input-wrap" @click="handleGenderSelect">
+              <text :class="['elegant-val', { 'dim': !formData.gender }]">
+                {{ formData.gender || '选择性别' }}
+              </text>
+              <view class="icon-arrow"></view>
+            </view>
+          </view>
+
+          <view class="elegant-item">
+            <text class="item-label">地区</text>
+            <view class="input-wrap">
+              <input 
+                class="elegant-input" 
+                v-model="formData.location" 
+                placeholder="设置地区" 
+                placeholder-class="placeholder-style"
+              />
+            </view>
+          </view>
+
+          <view class="elegant-item">
+            <text class="item-label">个性签名</text>
+            <view class="input-wrap area">
+              <textarea 
+                class="elegant-area" 
+                v-model="formData.signature" 
+                placeholder="介绍一下自己..." 
+                placeholder-class="placeholder-style"
+                auto-height
+              />
+            </view>
+          </view>
+        </view>
+
+        <!-- Action Section -->
+        <view class="action-section">
+          <button class="primary-btn" @click="handleSave">更新资料</button>
+          <text class="security-hint">资料修改将同步至所有关联服务</text>
         </view>
       </view>
-
-      <view class="form-group">
-        <text class="label">地区</text>
-        <input 
-          class="input" 
-          v-model="formData.location" 
-          placeholder="请输入地区" 
-          maxlength="20"
-        />
-      </view>
-      
-      <view class="form-group">
-        <text class="label">个签</text>
-        <textarea 
-          class="textarea" 
-          v-model="formData.signature" 
-          placeholder="介绍一下自己..." 
-          maxlength="50"
-          auto-height
-        />
-      </view>
-    </view>
-
-    <view class="hint-text">
-      完善这些信息，让朋友们更了解你
-    </view>
+    </scroll-view>
   </view>
 </template>
 
@@ -51,6 +80,7 @@
 import { ref, onMounted } from 'vue';
 
 const statusBarHeight = ref(20);
+const userAvatar = ref('');
 const formData = ref({
   nickname: '',
   signature: '',
@@ -68,6 +98,7 @@ onMounted(() => {
     formData.value.signature = user.signature || '';
     formData.value.gender = user.gender || '';
     formData.value.location = user.location || '';
+    userAvatar.value = user.avatar || '';
   }
 });
 
@@ -102,7 +133,7 @@ const handleSave = () => {
   
   uni.setStorageSync('user', updatedUser);
   uni.showToast({
-    title: '保存成功',
+    title: '资料已更新',
     icon: 'success',
     duration: 1500,
     success: () => {
@@ -115,114 +146,154 @@ const handleSave = () => {
 </script>
 
 <style scoped>
-/* ... previous styles ... */
 .container {
   min-height: 100vh;
-  background-color: #f7f8fa;
+  background-color: #fbfbfb;
+  color: #333;
+  display: flex;
+  flex-direction: column;
 }
 
 .header {
-  background-color: rgba(255, 255, 255, 0.9);
-  backdrop-filter: blur(30px);
-  position: sticky;
-  top: 0;
+  background-color: #fff;
   z-index: 100;
-  padding: 0 20px;
 }
 
 .header-content {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  height: 60px;
+  height: 96rpx;
+  padding: 0 40rpx;
+}
+
+.back-link {
+  font-size: 30rpx;
+  color: #888;
+  width: 120rpx;
 }
 
 .title {
-  font-size: 17px;
-  font-weight: 700;
-  color: #121212;
+  font-size: 32rpx;
+  font-weight: 500;
+  letter-spacing: 1rpx;
 }
 
-.back-btn {
-  width: 40px;
-  height: 40px;
+.placeholder {
+  width: 120rpx;
+}
+
+.scroll-body {
+  flex: 1;
+}
+
+.form-wrapper {
+  padding: 40rpx;
+}
+
+.avatar-section {
   display: flex;
+  flex-direction: column;
   align-items: center;
-  justify-content: center;
-  margin-left: -10px;
+  margin: 20rpx 0 60rpx;
 }
 
-.icon-back {
-  width: 12px;
-  height: 12px;
-  border-left: 2px solid #121212;
-  border-bottom: 2px solid #121212;
-  transform: rotate(45deg);
+.avatar-preview {
+  width: 144rpx;
+  height: 144rpx;
+  border-radius: 72rpx;
+  background-color: #f0f0f0;
 }
 
-.save-btn {
-  font-size: 15px;
-  font-weight: 600;
-  color: #007aff;
-  padding: 8px 4px;
+.avatar-hint {
+  font-size: 24rpx;
+  color: #aaa;
+  margin-top: 20rpx;
 }
 
-.form-container {
-  margin-top: 12px;
-  background-color: #ffffff;
+/* Elegant Form Styling */
+.elegant-form {
+  background-color: #fff;
+  border-radius: 24rpx;
+  padding: 10rpx 30rpx;
+  box-shadow: 0 4rpx 24rpx rgba(0,0,0,0.02);
 }
 
-.form-group {
-  display: flex;
-  align-items: center;
-  padding: 16px 20px;
-  border-bottom: 0.5px solid rgba(0, 0, 0, 0.05);
+.elegant-item {
+  padding: 32rpx 0;
+  border-bottom: 1rpx solid #f5f5f5;
 }
 
-.form-group:last-child {
+.elegant-item:last-child {
   border-bottom: none;
 }
 
-.label {
-  width: 70px;
-  font-size: 16px;
-  color: #121212;
-  font-weight: 500;
+.item-label {
+  font-size: 26rpx;
+  color: #999;
+  margin-bottom: 16rpx;
+  display: block;
 }
 
-.input {
-  flex: 1;
-  font-size: 16px;
-  color: #121212;
-}
-
-.picker-trigger {
-  flex: 1;
+.input-wrap {
   display: flex;
   justify-content: space-between;
   align-items: center;
 }
 
-.picker-text {
-  font-size: 16px;
-  color: #121212;
+.elegant-input, .elegant-val, .elegant-area {
+  font-size: 32rpx;
+  color: #1a1a1a;
+  flex: 1;
 }
 
-.arrow {
-  font-size: 12px;
+.elegant-area {
+  min-height: 100rpx;
+  line-height: 1.5;
+}
+
+.dim {
   color: #ccc;
 }
 
-.textarea {
-  flex: 1;
-  font-size: 16px;
-  color: #121212;
-  min-height: 24px;
+.icon-arrow {
+  width: 12rpx;
+  height: 12rpx;
+  border-top: 2rpx solid #ccc;
+  border-right: 2rpx solid #ccc;
+  transform: rotate(45deg);
+  margin-left: 20rpx;
 }
 
-.hint-text {
-  padding: 12px 20px;
-  font-size: 13px;
-  color: #999;
+.placeholder-style {
+  color: #d1d1d1;
+}
+
+.action-section {
+  margin-top: 80rpx;
+  text-align: center;
+}
+
+.primary-btn {
+  background-color: #1a1a1a;
+  color: #fff;
+  height: 96rpx;
+  line-height: 96rpx;
+  border-radius: 48rpx;
+  font-size: 30rpx;
+  font-weight: 500;
+  border: none;
+  margin-bottom: 30rpx;
+  box-shadow: 0 10rpx 30rpx rgba(0,0,0,0.1);
+}
+
+.primary-btn:active {
+  background-color: #333;
+  transform: scale(0.98);
+}
+
+.security-hint {
+  font-size: 22rpx;
+  color: #ccc;
 }
 </style>
