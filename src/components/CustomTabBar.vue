@@ -23,6 +23,7 @@ const props = defineProps({
 const tabs = [
   { text: '消息', path: '/pages/index/index', iconText: 'M' },
   { text: '联系人', path: '/pages/contact/list', iconText: 'C' },
+  { text: '发现', path: '/pages/moments/index', iconText: 'D' },
   { text: '个人', path: '/pages/mine/mine', iconText: 'P' }
 ];
 

@@ -535,9 +535,9 @@ scroll-view {
 }
 
 .media-preview-bar {
-  padding: 16px 12px 4px; /* Increased top padding to prevent 'X' icon clipping */
-  background-color: rgba(255, 255, 255, 0.95);
-  backdrop-filter: blur(10px);
+  padding: 12px 12px 8px; 
+  background-color: rgba(255, 255, 255, 0.98);
+  backdrop-filter: blur(20px);
   border-bottom: 0.5px solid rgba(0, 0, 0, 0.05);
 }
 
@@ -557,7 +557,8 @@ scroll-view {
   width: 60px;
   height: 60px;
   flex-shrink: 0;
-  margin-right: 8px; /* Safe space for right-side 'X' of adjacent items */
+  margin-right: 12px;
+  margin-top: 6px; 
 }
 
 .preview-thumb {
@@ -599,17 +600,24 @@ scroll-view {
 
 .remove-preview {
   position: absolute;
-  top: -6px; right: -6px;
-  width: 18px; height: 18px;
-  background-color: rgba(0, 0, 0, 0.5);
+  top: -6px; 
+  right: -6px;
+  width: 16px; 
+  height: 16px;
+  background-color: rgba(0, 0, 0, 0.4);
   color: white;
   border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 10px;
-  border: 1px solid white;
+  font-size: 8px;
+  border: 1.5px solid white;
   z-index: 10;
+  transition: transform 0.2s;
+}
+
+.remove-preview:active {
+  transform: scale(0.85);
 }
 
 .input-area {

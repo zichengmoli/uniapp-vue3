@@ -115,7 +115,7 @@ const menuGroups = [
   [
     { text: '收藏', iconClass: 'icon-collect', colorClass: 'bg-blue' },
     { text: '修改密码', iconClass: 'icon-password', colorClass: 'bg-black', action: 'password' },
-    { text: '钱包', iconClass: 'icon-wallet', colorClass: 'bg-green' }
+    { text: '朋友圈', iconClass: 'icon-moments', colorClass: 'bg-purple', action: 'moments' }
   ],
   [
     { text: '设置', iconClass: 'icon-settings', colorClass: 'bg-gray' },
@@ -141,6 +141,8 @@ const handleMenuClick = (item) => {
     passwordData.new = '';
     passwordData.confirm = '';
     showPwdModal.value = true;
+  } else if (item.action === 'moments') {
+    uni.navigateTo({ url: `/pages/moments/user?userId=${currentUser.id}` });
   } else {
     uni.showToast({ title: item.text + ' 功能即将推出', icon: 'none' });
   }
@@ -383,14 +385,14 @@ const handleLogout = () => {
 }
 
 /* Icons */
+.icon-moments { width: 16px; height: 16px; border: 1.5px solid #a29bfe; border-radius: 4px; position: relative; }
+.icon-moments::after { content: ''; position: absolute; left: 4px; top: 4px; width: 6px; height: 6px; border: 1.5px solid #a29bfe; border-radius: 50%; }
+
 .icon-collect { width: 14px; height: 16px; border: 1.5px solid #4a90e2; border-bottom: none; position: relative; }
 .icon-collect::after { content: ''; position: absolute; bottom: -4px; left: -1.5px; width: 0; height: 0; border-left: 7px solid transparent; border-right: 7px solid transparent; border-bottom: 5px solid #fff; transform: rotate(180deg); }
 
 .icon-password { width: 14px; height: 16px; border: 1.5px solid #000; border-radius: 7px 7px 2px 2px; position: relative; }
 .icon-password::after { content: ''; position: absolute; top: 10px; left: 3px; width: 5px; height: 2px; background: #000; }
-
-.icon-wallet { width: 16px; height: 12px; border: 1.5px solid #2ecc71; border-radius: 3px; position: relative; }
-.icon-wallet::after { content: ''; position: absolute; right: 2px; top: 50%; width: 4px; height: 2px; background: #2ecc71; }
 
 .icon-settings { width: 16px; height: 16px; border: 5px dotted #999; border-radius: 50%; box-sizing: border-box; }
 
@@ -398,6 +400,7 @@ const handleLogout = () => {
 .icon-logout::before { content: ''; position: absolute; left: -4px; top: 50%; width: 8px; height: 1.5px; background: #ff7675; }
 .icon-logout::after { content: ''; position: absolute; left: 2px; top: 50%; width: 5px; height: 5px; border-top: 1.5px solid #ff7675; border-right: 1.5px solid #ff7675; transform: rotate(45deg) translateY(-50%); }
 
+.bg-purple { background-color: #f3f0ff; }
 .bg-blue { background-color: #eef5ff; }
 .bg-black { background-color: #f2f2f2; }
 .bg-green { background-color: #f0fff4; }

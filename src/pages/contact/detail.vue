@@ -3,7 +3,7 @@
     <view class="header" :style="{ paddingTop: statusBarHeight + 'px' }">
       <view class="header-content">
         <view class="back-btn" @click="goBack">
-          <view class="icon-back-thin"></view>
+          <text class="back-icon">❮</text>
         </view>
         <view class="more-btn">
           <view class="icon-dots-horiz-dark"></view>
@@ -35,12 +35,23 @@
     </view>
     
     <view class="info-list">
-      <view class="info-item" hover-class="item-hover">
+      <view class="info-item" v-if="previewImages.length > 0" hover-class="item-hover" @click="goToContactMoments">
         <text class="info-label">朋友圈</text>
         <view class="info-content">
-          <view class="moment-placeholder"></view>
-          <view class="moment-placeholder"></view>
-          <view class="moment-placeholder"></view>
+          <image 
+            v-for="(img, index) in previewImages" 
+            :key="index"
+            :src="img"
+            mode="aspectFill"
+            class="moment-preview-img"
+          />
+        </view>
+        <text class="arrow">❯</text>
+      </view>
+      <view v-else class="info-item" hover-class="item-hover" @click="goToContactMoments">
+        <text class="info-label">朋友圈</text>
+        <view class="info-content">
+          <text class="no-moments">查看朋友圈</text>
         </view>
         <text class="arrow">❯</text>
       </view>
@@ -82,9 +93,9 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue';
+import { ref, computed, onMounted } from 'vue';
 import { onLoad } from '@dcloudio/uni-app';
-import { contactsList } from '../../mock/data.js';
+import { contactsList, momentsData } from '../../mock/data.js';
 import ProfileHeader from '../../components/ProfileHeader.vue';
 
 const contact = ref({});
@@ -105,8 +116,32 @@ onLoad((options) => {
 });
 
 onMounted(() => {
-  const systemInfo = uni.getSystemInfoSync();
-  statusBarHeight.value = systemInfo.statusBarHeight || 20;
+  try {
+    const windowInfo = uni.getWindowInfo();
+    statusBarHeight.value = windowInfo.statusBarHeight || 20;
+  } catch (e) {
+    const systemInfo = uni.getSystemInfoSync();
+    statusBarHeight.value = systemInfo.statusBarHeight || 20;
+  }
+});
+
+const previewImages = computed(() => {
+  if (!contact.value.id) return [];
+  
+  // Get all images from user's moments
+  const images = [];
+  const userMoments = momentsData.filter(m => m.userId === contact.value.id);
+  
+  for (const moment of userMoments) {
+    if (moment.images && moment.images.length > 0) {
+      for (const img of moment.images) {
+        images.push(img);
+        if (images.length >= 3) return images;
+      }
+    }
+  }
+  
+  return images;
 });
 
 const goBack = () => {
@@ -123,6 +158,14 @@ const goToChat = () => {
 
 const showMoreInfo = () => {
   showingMoreInfo.value = true;
+};
+
+const goToContactMoments = () => {
+  if (contact.value.id) {
+    uni.navigateTo({
+      url: `/pages/moments/user?userId=${contact.value.id}`
+    });
+  }
 };
 
 const showToast = (feature) => {
@@ -161,13 +204,10 @@ const showToast = (feature) => {
   align-items: center;
 }
 
-.icon-back-thin {
-  width: 12px;
-  height: 12px;
-  border-left: 2px solid #1a1a1a;
-  border-bottom: 2px solid #1a1a1a;
-  transform: rotate(45deg);
-  margin-left: 4px;
+.back-icon {
+  font-size: 20px;
+  color: #1a1a1a;
+  font-weight: bold;
 }
 
 .icon-dots-horiz-dark {
@@ -298,11 +338,16 @@ const showToast = (feature) => {
   gap: 8px;
 }
 
-.moment-placeholder {
+.moment-preview-img {
   width: 44px;
   height: 44px;
   background-color: #f0f1f5;
   border-radius: 8px;
+}
+
+.no-moments {
+  font-size: 14px;
+  color: #999;
 }
 
 .arrow {

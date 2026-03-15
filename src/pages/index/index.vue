@@ -20,11 +20,7 @@
     >
       <!-- Custom refresher UI -->
       <view slot="refresher" class="custom-refresher">
-        <view class="elegant-dots-container">
-          <view class="elegant-dots" :class="{ 'pulsing': isRefreshing }">
-            <view class="dot" v-for="i in 3" :key="i" :style="{ animationDelay: `${(i-1)*0.2}s` }"></view>
-          </view>
-        </view>
+        <LoadingDots :pulsing="isRefreshing" />
         <text class="refresher-text">{{ isRefreshing ? '正在同步' : '下拉同步' }}</text>
       </view>
       <ChatItem 
@@ -46,11 +42,7 @@
       <!-- Load More Loading Indicator -->
       <view class="load-more-status" v-if="chats.length > 0">
         <template v-if="isLoadingMore">
-          <view class="elegant-dots-container">
-            <view class="elegant-dots pulsing small">
-              <view class="dot" v-for="i in 3" :key="i" :style="{ animationDelay: `${(i-1)*0.2}s` }"></view>
-            </view>
-          </view>
+          <LoadingDots :pulsing="true" size="small" />
           <text class="load-text">同步中</text>
         </template>
         <view v-else-if="!hasMore" class="end-divider">
@@ -78,6 +70,7 @@ import { chatList } from '../../mock/data.js';
 import CustomTabBar from '../../components/CustomTabBar.vue';
 import HeaderBar from '../../components/HeaderBar.vue';
 import ChatItem from '../../components/ChatItem.vue';
+import LoadingDots from '../../components/LoadingDots.vue';
 
 const chats = ref([]);
 const showSearch = ref(false);

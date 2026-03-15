@@ -50,6 +50,27 @@
         "navigationBarTitleText": "Edit Profile",
         "navigationStyle": "custom"
       }
+    },
+    {
+      "path": "pages/moments/index",
+      "style": {
+        "navigationBarTitleText": "Moments",
+        "navigationStyle": "custom"
+      }
+    },
+    {
+      "path": "pages/moments/post",
+      "style": {
+        "navigationBarTitleText": "Post Moment",
+        "navigationStyle": "custom"
+      }
+    },
+    {
+      "path": "pages/moments/user",
+      "style": {
+        "navigationBarTitleText": "User Moments",
+        "navigationStyle": "custom"
+      }
     }
   ],
   "globalStyle": {
@@ -71,6 +92,10 @@
       {
         "pagePath": "pages/contact/list",
         "text": "联系人"
+      },
+      {
+        "pagePath": "pages/moments/index",
+        "text": "发现"
       },
       {
         "pagePath": "pages/mine/mine",
